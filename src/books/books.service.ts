@@ -14,6 +14,10 @@ export class BooksService {
     return `This action returns all books`;
   }
 
+  findByFields({ isbn, enable  }: Partial<CreateBookDto>) {
+    const data = 
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} book`;
   }
