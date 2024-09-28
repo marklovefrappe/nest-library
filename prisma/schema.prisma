@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  phoneNumber  String?
+  // memberSince  DateTime @default(now())
+  role          UserRole @default(USER) // UserRole enum to distinguish between admins and regular users
+  createdAt       DateTime   @default(now()) // Automatically set when a record is created
+  updatedAt       DateTime   @updatedAt      // Automatically updated when a record is updated
+
+  transactions         BookTransaction[]  
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model Book {
+  id                Int  @id @default(autoincrement())
+  isbn              String     @unique
+  title             String
+  author            String
+  type              BookType
+  genre             String
+  briefContent     String
+  description       String?
+  enable            Boolean @default(true)
+  // disableAt        DateTime?  // NULL by default; set a timestamp if soft deleted
+  createdAt        DateTime   @default(now()) // Automatically set when a record is created
+  updatedAt        DateTime   @updatedAt      // Automatically updated when a record is updated
+
+  bookInstances            BookInstance[]
+
+  // @@unique([isbn, enable])
+}
+
+enum BookType {
+  FICTION
+  NON_FICTION
+}
+
+model BookInstance {
+  id         Int      @id @default(autoincrement())
+  bookId     Int
+  barcode    String   @unique // Unique identifier for each physical copy
+  status     BookInstanceStatus   
+  bookCondition String // Condition of the physical book (e.g., "New", "Good", "Worn")
+  rentedOut  Boolean  @default(false)
+  dueDate    DateTime?
+  location   String   // Library location, section, etc.
+  
+  // Foreign key relationship to the Book model
+  book       Book     @relation(fields: [bookId], references: [id])
+  transactions         BookTransaction[]
+}
+
+enum BookInstanceStatus {
+  AVAILABLE
+  RENTED
+  DAMAGED
+}
+
+
+model BookTransaction {
+  tid              String   @id @default(uuid()) @unique // Unique transaction ID
+  transactionNumber String  @unique
+  bookInstanceId          Int
+  userId          Int
+  transactionType TransactionType
+  // transactionDate DateTime @default(now())
+  dueDate         DateTime? // For borrow/loan transactions
+  returnDate      DateTime? // For returning the book
+  createdAt       DateTime   @default(now()) // Automatically set when a record is created
+  updatedAt       DateTime   @updatedAt      // Automatically updated when a record is updated
+
+  // Relations
+  bookInstance             BookInstance     @relation(fields: [bookInstanceId], references: [id])
+  user             User     @relation(fields: [userId], references: [id])
+
+  @@index([bookInstanceId, userId])
+}
+
+enum TransactionType {
+  BORROW   // When a user borrows a book
+  RETURN   // When a user returns a book
+}
+
