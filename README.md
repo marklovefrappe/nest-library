@@ -27,9 +27,13 @@
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Checkpoints for Further Development
-Authentication
-Error Handling
-User Module (rentBook service, returnBook service)
+- Authentication
+- Error Handling
+- User Module
+  - rentBook service
+  - returnBook service)
+
+
 ## Project setup
 
 ```bash
