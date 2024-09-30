@@ -21,12 +21,12 @@ export class ListBookDto {
   @IsIn(['available', 'unavailable'])
   filter?: 'available' | 'unavailable';
 
-  //   @Transform(({ value }) => (value ? parseInt(value, 10) : 10))
+  @Transform(({ value }) => (value ? parseInt(value, 10) : 10))
   @IsInt()
   @IsPositive()
   limit: number = 10;
 
-  //   @Transform(({ value }) => (value ? parseInt(value, 10) : 1))
+  @Transform(({ value }) => (value ? parseInt(value, 10) : 1))
   @IsInt()
   @Min(1) // Ensures the page is at least 1
   page: number = 1;

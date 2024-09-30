@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -19,7 +20,7 @@ model User {
   email         String   @unique
   phoneNumber  String?
   // memberSince  DateTime @default(now())
-  role          UserRole @default(USER) // UserRole enum to distinguish between admins and regular users
+  role          UserRole @default(user) // UserRole enum to distinguish between admins and regular users
   createdAt       DateTime   @default(now()) // Automatically set when a record is created
   updatedAt       DateTime   @updatedAt      // Automatically updated when a record is updated
 
@@ -27,8 +28,8 @@ model User {
 }
 
 enum UserRole {
-  USER
-  ADMIN
+  user
+  admin
 }
 
 model Book {
@@ -51,8 +52,8 @@ model Book {
 }
 
 enum BookType {
-  FICTION
-  NON_FICTION
+  fiction
+  non_fiction
 }
 
 model BookInstance {
@@ -64,6 +65,9 @@ model BookInstance {
   rentedOut  Boolean  @default(false)
   dueDate    DateTime?
   location   String   // Library location, section, etc.
+  createdAt       DateTime   @default(now()) // Automatically set when a record is created
+  updatedAt       DateTime   @updatedAt      // Automatically updated when a record is updated
+
   
   // Foreign key relationship to the Book model
   book       Book     @relation(fields: [bookId], references: [id])
@@ -71,9 +75,9 @@ model BookInstance {
 }
 
 enum BookInstanceStatus {
-  AVAILABLE
-  RENTED
-  DAMAGED
+  available
+  rented
+  damaged
 }
 
 
@@ -97,7 +101,7 @@ model BookTransaction {
 }
 
 enum TransactionType {
-  BORROW   // When a user borrows a book
-  RETURN   // When a user returns a book
+  borrow   // When a user borrows a book
+  return   // When a user returns a book
 }
 

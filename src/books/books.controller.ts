@@ -10,8 +10,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { Prisma } from '@prisma/client';
-// import { query } from 'express';
 import { ListBookDto } from './dto/list-book.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -24,9 +22,6 @@ export class BooksController {
   create(
     @Body(new ValidationPipe({ transform: true })) createBookDto: CreateBookDto,
   ) {
-    // Get book, check isbn, check enable
-
-    const book = console.log(createBookDto);
     return this.booksService.create(createBookDto);
   }
 
@@ -38,18 +33,18 @@ export class BooksController {
     return this.booksService.findAll(listBookDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.booksService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.booksService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    return this.booksService.update(+id, updateBookDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
+  //   return this.booksService.update(+id, updateBookDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.booksService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.booksService.remove(+id);
+  // }
 }
