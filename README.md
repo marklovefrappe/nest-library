@@ -31,7 +31,7 @@
 - Error Handling
 - User Module
   - rentBook service
-  - returnBook service)
+  - returnBook service
 
 
 ## Project setup
