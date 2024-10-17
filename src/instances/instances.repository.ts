@@ -9,7 +9,7 @@ export class InstancesRepository {
   constructor(private readonly prisma: DatabaseService) {}
 
   async getBookById(id: number): Promise<Type.Create.RepositoryType> {
-    return this.prisma.book.findUnique({
+    return await this.prisma.book.findUnique({
       where: {
         id,
       },
@@ -64,7 +64,7 @@ export class InstancesRepository {
   }
 
   async getBookInstanceById(id: number): Promise<Type.FindOne.RepositoryType> {
-    return this.prisma.bookInstance.findUnique({
+    return await this.prisma.bookInstance.findUnique({
       where: {
         id,
       },
@@ -75,13 +75,13 @@ export class InstancesRepository {
   }
 
   async createBookInstance(data: Prisma.BookInstanceCreateInput) {
-    return this.prisma.bookInstance.create({
+    return await this.prisma.bookInstance.create({
       data,
     });
   }
 
   async updateBookInstance(id: number, data: Prisma.BookInstanceUpdateInput) {
-    return this.prisma.bookInstance.update({
+    return await this.prisma.bookInstance.update({
       where: {
         id,
       },

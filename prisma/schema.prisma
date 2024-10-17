@@ -19,6 +19,8 @@ model User {
   name          String
   email         String   @unique
   phoneNumber  String?
+  password String
+  passwordResetCode String?
   // memberSince  DateTime @default(now())
   role          UserRole @default(user) // UserRole enum to distinguish between admins and regular users
   createdAt       DateTime   @default(now()) // Automatically set when a record is created

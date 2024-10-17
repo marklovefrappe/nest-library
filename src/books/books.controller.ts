@@ -8,6 +8,7 @@ import {
   Query,
   Delete,
   ValidationPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { ListBookDto } from './dto/list-book.dto';
@@ -19,32 +20,37 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Post()
-  create(
+  async create(
     @Body(new ValidationPipe({ transform: true })) createBookDto: CreateBookDto,
   ) {
-    return this.booksService.create(createBookDto);
+    return await this.booksService.create(createBookDto);
+  }
+
+  @Post('/rent')
+  async rentBook(
+    @Body(new ValidationPipe({ transform: true })) createBookDto: CreateBookDto,
+  ) {
+    return await this.booksService.create(createBookDto);
   }
 
   @Get()
-  findAll(
+  async findAll(
     @Query(new ValidationPipe({ transform: true })) listBookDto: ListBookDto,
   ) {
     console.log(listBookDto);
-    return this.booksService.findAll(listBookDto);
+    return await this.booksService.findAll(listBookDto);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.booksService.findOne(+id);
-  // }
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.booksService.findOne(id);
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-  //   return this.booksService.update(+id, updateBookDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.booksService.remove(+id);
-  // }
+  @Patch(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body(new ValidationPipe({ transform: true })) updateBookDto: UpdateBookDto,
+  ) {
+    return await this.booksService.update(id, updateBookDto);
+  }
 }

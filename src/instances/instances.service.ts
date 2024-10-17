@@ -38,7 +38,6 @@ export class InstancesService {
     };
 
     await this.db.createBookInstance(createInstanceObj);
-
     return 'Create book instance successfully';
   }
 
@@ -66,11 +65,16 @@ export class InstancesService {
     }
 
     await this.db.updateBookInstance(id, updateInstanceDto);
-
     return 'Update book instance successfully';
   }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} instance`;
-  // }
+  async rentBook(id: number, updateInstanceDto: UpdateInstanceDto) {
+    const bookInstance = await this.db.getBookInstanceById(id);
+    if (!bookInstance) {
+      throw new Error('Book instance not found');
+    }
+
+    await this.db.updateBookInstance(id, updateInstanceDto);
+    return 'Update book instance successfully';
+  }
 }

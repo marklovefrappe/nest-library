@@ -9,13 +9,28 @@ import * as Type from './books.type';
 export class BooksRepository {
   constructor(private readonly prisma: DatabaseService) {}
 
-  async getBookById(id: number) {
-    return this.prisma.book.findUnique({
+  async getBookById(
+    id: number,
+    include: boolean,
+  ): Promise<Type.FindOne.RepositoryType> {
+    let bookInclude: Prisma.BookInclude = {};
+    if (include) {
+      bookInclude = {
+        bookInstances: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      };
+    }
+
+    return await this.prisma.book.findUnique({
       where: { id },
+      include: bookInclude,
     });
   }
-  async getBookByFields({ isbn, enable }: Partial<Book>): Promise<Book | null> {
-    return this.prisma.book.findFirst({
+  async getBookByFields({ isbn, enable }: Partial<Book>) {
+    return await this.prisma.book.findFirst({
       where: {
         isbn,
         enable,
@@ -33,7 +48,7 @@ export class BooksRepository {
     let whereBook: Prisma.BookWhereInput = {
       enable: true,
     };
-    let includeBook: Prisma.BookInclude = {
+    const includeBook: Prisma.BookInclude = {
       bookInstances: true,
     };
 
@@ -63,7 +78,7 @@ export class BooksRepository {
       if (searchType === 'type') {
         whereBook = {
           ...whereBook,
-          type: search as 'fiction',
+          type: search as 'fiction' | 'non_fiction',
         };
       }
     }
@@ -123,13 +138,22 @@ export class BooksRepository {
   }
 
   async createBook(data: Prisma.BookCreateInput) {
-    return this.prisma.book.create({
+    return await this.prisma.book.create({
+      data,
+    });
+  }
+
+  async updateBook(id: number, data: Prisma.BookUpdateInput) {
+    return await this.prisma.book.update({
+      where: {
+        id,
+      },
       data,
     });
   }
 
   async listBookInstances(ids: number[]): Promise<BookInstance[]> {
-    return this.prisma.bookInstance.findMany({
+    return await this.prisma.bookInstance.findMany({
       where: {
         bookId: {
           in: ids,
@@ -137,6 +161,4 @@ export class BooksRepository {
       },
     });
   }
-
-  // Other database functions for books
 }

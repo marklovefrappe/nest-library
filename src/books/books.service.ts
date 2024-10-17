@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { ListBookDto } from './dto/list-book.dto';
@@ -31,22 +31,27 @@ export class BooksService {
     const { books: _books } = books;
     console.log(_books);
 
-    // const bookIds = _books.map((book) => book.id);
-    // const bookInstances = await this.db.listBookInstances(bookIds);
-
     const response = this.format.formatfindAll({ books });
     return response;
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} book`;
-  // }
+  async findOne(id: number) {
+    const book = await this.db.getBookById(id, true);
+    if (!book) {
+      throw new Error('Book not found');
+    }
 
-  // update(id: number, updateBookDto: UpdateBookDto) {
-  //   return `This action updates a #${id} book`;
-  // }
+    const response = this.format.formatfindOne({ book });
+    return response;
+  }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} book`;
-  // }
+  async update(id: number, updateBookDto: UpdateBookDto) {
+    const book = await this.db.getBookById(id, false);
+    if (!book) {
+      throw new Error('Book not found');
+    }
+
+    await this.db.updateBook(id, updateBookDto);
+    return 'Update book successfully';
+  }
 }

@@ -19,37 +19,35 @@ export class InstancesController {
   constructor(private readonly instancesService: InstancesService) {}
 
   @Post()
-  create(
+  async create(
     @Body(new ValidationPipe({ transform: true }))
     createInstanceDto: CreateInstanceDto,
   ) {
-    return this.instancesService.create(createInstanceDto);
+    return await this.instancesService.create(createInstanceDto);
   }
 
   @Get()
-  findAll(
+  async findAll(
     @Query(new ValidationPipe({ transform: true }))
     listInstanceDto: ListInstanceDto,
   ) {
-    return this.instancesService.findAll(listInstanceDto);
+    return await this.instancesService.findAll(listInstanceDto);
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.instancesService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.instancesService.findOne(id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body(new ValidationPipe({ transform: true }))
     updateInstanceDto: UpdateInstanceDto,
   ) {
-    return this.instancesService.update(id, updateInstanceDto);
+    return await this.instancesService.update(id, updateInstanceDto);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.instancesService.remove(+id);
-  // }
+  // @Post()
+  // async rentBook(@Body() rentBookDto: RentBookDto) {}
 }
